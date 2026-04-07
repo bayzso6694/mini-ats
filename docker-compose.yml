@@ -1,0 +1,85 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: atsdb
+      POSTGRES_USER: ats
+      POSTGRES_PASSWORD: ats123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ats -d atsdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+
+  training:
+    build:
+      context: ./training
+      dockerfile: Dockerfile
+    environment:
+      ARTIFACTS_DIR: /artifacts
+    volumes:
+      - artifacts:/artifacts
+      - ./training/dataset.csv:/app/dataset.csv
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      DATABASE_URL: postgresql+psycopg2://ats:ats123@db:5432/atsdb
+      REDIS_URL: redis://redis:6379/0
+      ARTIFACTS_DIR: /artifacts
+      UPLOADS_DIR: /uploads
+      RANKING_CHANNEL: ranking_updates
+    ports:
+      - "8000:8000"
+    volumes:
+      - artifacts:/artifacts
+      - uploads:/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      training:
+        condition: service_completed_successfully
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: celery -A worker.celery_app worker --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+psycopg2://ats:ats123@db:5432/atsdb
+      REDIS_URL: redis://redis:6379/0
+      ARTIFACTS_DIR: /artifacts
+      UPLOADS_DIR: /uploads
+      RANKING_CHANNEL: ranking_updates
+    volumes:
+      - artifacts:/artifacts
+      - uploads:/uploads
+    depends_on:
+      backend:
+        condition: service_started
+
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html:ro
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  artifacts:
+  uploads:

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mini ATS Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <h1>Mini ATS</h1>
+        <p>Recruit, score, and rank candidates in real time.</p>
+        <div class="status-dot-wrap">
+          <span class="dot"></span>
+          <span id="wsStatus">Socket: Disconnected</span>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section class="card">
+          <h2>Create Job</h2>
+          <form id="jobForm" class="grid-form">
+            <label>
+              Job Title
+              <input type="text" id="jobTitle" required />
+            </label>
+            <label>
+              Min Experience (years)
+              <input type="number" id="minExperience" min="0" value="0" required />
+            </label>
+            <label class="full">
+              Job Description
+              <textarea id="jobDescription" rows="4" required></textarea>
+            </label>
+            <label class="full">
+              Required Skills (comma separated)
+              <input type="text" id="requiredSkills" placeholder="python, fastapi, sql" required />
+            </label>
+            <button type="submit">Create Job</button>
+          </form>
+          <p id="jobMsg" class="message"></p>
+        </section>
+
+        <section class="card">
+          <h2>Upload Resumes</h2>
+          <form id="uploadForm" class="grid-form">
+            <label>
+              Select Job
+              <select id="uploadJobSelect" required></select>
+            </label>
+            <label>
+              Candidate Name
+              <input type="text" id="candidateName" required />
+            </label>
+            <label>
+              Candidate Email
+              <input type="email" id="candidateEmail" required />
+            </label>
+            <label class="full">
+              Resume PDFs
+              <input type="file" id="resumeFiles" accept="application/pdf" multiple required />
+            </label>
+            <button type="submit">Upload Files</button>
+          </form>
+          <div id="uploadStatusList" class="status-list"></div>
+        </section>
+
+        <section class="card">
+          <h2>Live Rankings</h2>
+          <div class="inline-controls">
+            <label>
+              Watch Job
+              <select id="watchJobSelect"></select>
+            </label>
+            <button id="refreshRankings">Refresh</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Fit Score</th>
+                  <th>Hire Probability</th>
+                  <th>Cluster</th>
+                  <th>Status</th>
+                  <th>Shortlist</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="rankingBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
